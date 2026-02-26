@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Parser Tool</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #1e293b;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    header .badge {
+      background: #f59e0b;
+      color: #0f172a;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+
+    .toolbar {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .toolbar label {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-left: auto;
+    }
+
+    .toolbar select {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 0.5rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    button:active { transform: scale(0.97); }
+    button:hover { opacity: 0.9; }
+
+    .btn-validate { background: #3b82f6; color: #fff; }
+    .btn-format   { background: #10b981; color: #fff; }
+    .btn-minify   { background: #8b5cf6; color: #fff; }
+    .btn-clear    { background: #475569; color: #fff; }
+    .btn-copy     { background: #0ea5e9; color: #fff; }
+
+    .panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 0.6rem 1rem;
+      background: #0f172a;
+      border-bottom: 1px solid #334155;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    textarea, .output-box {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #e2e8f0;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      padding: 1rem;
+      resize: none;
+      outline: none;
+      overflow: auto;
+    }
+
+    .output-box {
+      white-space: pre;
+    }
+
+    .output-box.error {
+      color: #f87171;
+    }
+
+    .output-box.success {
+      color: #34d399;
+    }
+
+    .status-bar {
+      grid-column: 1 / -1;
+      font-size: 0.8rem;
+      color: #64748b;
+      padding: 0.25rem 0;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .status-bar span { color: #94a3b8; }
+
+    @media (max-width: 680px) {
+      main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JSON Parser Tool</h1>
+    <span class="badge">v1.0</span>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <button class="btn-validate" id="btnValidate">✔ Validate</button>
+      <button class="btn-format"   id="btnFormat">⬡ Format</button>
+      <button class="btn-minify"   id="btnMinify">⟨⟩ Minify</button>
+      <button class="btn-clear"    id="btnClear">✕ Clear</button>
+      <label for="indentSelect">Indent:</label>
+      <select id="indentSelect">
+        <option value="2" selected>2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="1">1 tab</option>
+      </select>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">Input JSON</div>
+      <textarea id="inputArea" placeholder='Paste your JSON here…&#10;&#10;Example:&#10;{"name":"Alice","age":30,"hobbies":["reading","coding"]}'></textarea>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        Output
+        <button class="btn-copy" id="btnCopy" style="padding:0.2rem 0.6rem;font-size:0.75rem;">Copy</button>
+      </div>
+      <div class="output-box" id="outputBox"></div>
+    </div>
+
+    <div class="status-bar" id="statusBar">
+      <span id="statusMsg">Ready – paste JSON and click an action.</span>
+    </div>
+  </main>
+
+  <script>
+    const inputArea   = document.getElementById('inputArea');
+    const outputBox   = document.getElementById('outputBox');
+    const statusMsg   = document.getElementById('statusMsg');
+    const indentSelect = document.getElementById('indentSelect');
+
+    function getIndent() {
+      const v = indentSelect.value;
+      return v === '1' ? '\t' : parseInt(v, 10);
+    }
+
+    function setOutput(text, isError) {
+      outputBox.textContent = text;
+      outputBox.className = 'output-box ' + (isError ? 'error' : 'success');
+    }
+
+    function setStatus(msg) {
+      statusMsg.textContent = msg;
+    }
+
+    document.getElementById('btnValidate').addEventListener('click', () => {
+      const input = inputArea.value.trim();
+      if (!input) { setStatus('Nothing to validate.'); return; }
+      try {
+        JSON.parse(input);
+        setOutput('✔ Valid JSON', false);
+        setStatus('JSON is valid.');
+      } catch (e) {
+        setOutput('✘ Invalid JSON\n\n' + e.message, true);
+        setStatus('Validation failed: ' + e.message);
+      }
+    });
+
+    document.getElementById('btnFormat').addEventListener('click', () => {
+      const input = inputArea.value.trim();
+      if (!input) { setStatus('Nothing to format.'); return; }
+      try {
+        const parsed = JSON.parse(input);
+        const indent = getIndent();
+        const formatted = JSON.stringify(parsed, null, indent);
+        inputArea.value = formatted;
+        setOutput(formatted, false);
+        setStatus('Formatted successfully.');
+      } catch (e) {
+        setOutput('✘ Cannot format – invalid JSON\n\n' + e.message, true);
+        setStatus('Format failed: ' + e.message);
+      }
+    });
+
+    document.getElementById('btnMinify').addEventListener('click', () => {
+      const input = inputArea.value.trim();
+      if (!input) { setStatus('Nothing to minify.'); return; }
+      try {
+        const parsed = JSON.parse(input);
+        const minified = JSON.stringify(parsed);
+        inputArea.value = minified;
+        setOutput(minified, false);
+        setStatus('Minified successfully. Size: ' + new Blob([minified]).size + ' bytes.');
+      } catch (e) {
+        setOutput('✘ Cannot minify – invalid JSON\n\n' + e.message, true);
+        setStatus('Minify failed: ' + e.message);
+      }
+    });
+
+    document.getElementById('btnClear').addEventListener('click', () => {
+      inputArea.value = '';
+      outputBox.textContent = '';
+      outputBox.className = 'output-box';
+      setStatus('Cleared.');
+    });
+
+    document.getElementById('btnCopy').addEventListener('click', () => {
+      const text = outputBox.textContent;
+      if (!text) { setStatus('Nothing to copy.'); return; }
+      navigator.clipboard.writeText(text).then(() => {
+        setStatus('Output copied to clipboard.');
+      }).catch(() => {
+        setStatus('Copy failed – please copy manually.');
+      });
+    });
+  </script>
+</body>
+</html>
