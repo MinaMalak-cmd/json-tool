@@ -1,0 +1,14 @@
+{
+  "name": "json-parser-tool",
+  "version": "1.0.0",
+  "description": "A tool for playing with JSON - validate, format, and minify JSON",
+  "main": "src/parser.js",
+  "scripts": {
+    "test": "jest",
+    "start": "npx serve . -p 3000"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "license": "MIT"
+}
