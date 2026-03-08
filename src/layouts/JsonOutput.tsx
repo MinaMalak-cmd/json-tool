@@ -14,9 +14,6 @@ export default function JsonOutput({
       fullWidth
       minRows={15}
       value={value}
-      InputProps={{
-        readOnly: true,
-      }}
     />
   );
 }
