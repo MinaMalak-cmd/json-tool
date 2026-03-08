@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest"
   },
+  "type": "module",
   "dependencies": {
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/theme-one-dark": "^6.1.3",
