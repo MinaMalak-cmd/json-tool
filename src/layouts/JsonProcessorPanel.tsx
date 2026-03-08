@@ -22,8 +22,8 @@ export default function JsonProcessorPanel() {
   } = useJsonProcessor();
 
   return (
-    <Container maxWidth="lg">
-      <Stack spacing={3} mt={4}>
+    <Container maxWidth="xl">
+      <Stack spacing={3} mt={2}>
         <Stack
           direction="row"
           spacing={2}
@@ -45,9 +45,19 @@ export default function JsonProcessorPanel() {
           <CopyButton value={output} />
         </Stack>
 
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Paper sx={{ p: 2 }}>
+        <Grid
+          container
+          spacing={2}
+          height={"600px"}
+        >
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            height={"100%"}
+          >
+            <Paper
+              sx={{ p: 2 }}
+              style={{ height: "100%" }}
+            >
               <JsonInput
                 value={input}
                 onChange={setInput}
@@ -55,8 +65,14 @@ export default function JsonProcessorPanel() {
             </Paper>
           </Grid>
 
-          <Grid item xs={6}>
-            <Paper sx={{ p: 2 }}>
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            height={"100%"}
+          >
+            <Paper
+              sx={{ p: 2 }}
+              style={{ height: "100%" }}
+            >
               <JsonOutput
                 value={output}
               />
