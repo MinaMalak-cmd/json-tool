@@ -14,6 +14,8 @@ export default function JsonOutput({
       fullWidth
       minRows={15}
       value={value}
+      style={{ height: "600px" }}
+      className="json-output"
     />
   );
 }
