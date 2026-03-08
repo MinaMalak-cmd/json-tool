@@ -56,7 +56,11 @@ export default function JsonProcessorPanel() {
           >
             <Paper
               sx={{ p: 2 }}
-              style={{ height: "100%" }}
+              style={{
+                height: "100%",
+                background: "black",
+                color: "yellow !important",
+              }}
             >
               <JsonInput
                 value={input}
