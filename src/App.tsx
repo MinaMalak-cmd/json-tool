@@ -1,7 +1,9 @@
 import react from "react";
 
+import JsonProcessorPanel from "./layouts/JsonProcessorPanel";
+
 function App() {
-  return <h1>JSON Tool Phase 1</h1>;
+  return <JsonProcessorPanel />;
 }
 
 export default App;
