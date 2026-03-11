@@ -48,19 +48,12 @@ export default function JsonProcessorPanel() {
         <Grid
           container
           spacing={2}
-          height={"600px"}
         >
           <Grid
             size={{ xs: 12, md: 6 }}
-            height={"100%"}
           >
             <Paper
               sx={{ p: 2 }}
-              style={{
-                height: "100%",
-                background: "black",
-                color: "yellow !important",
-              }}
             >
               <JsonInput
                 value={input}
@@ -71,11 +64,9 @@ export default function JsonProcessorPanel() {
 
           <Grid
             size={{ xs: 12, md: 6 }}
-            height={"100%"}
           >
             <Paper
               sx={{ p: 2 }}
-              style={{ height: "100%" }}
             >
               <JsonOutput
                 value={output}
