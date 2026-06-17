@@ -37,8 +37,11 @@ describe("JsonProcessor (integration)", () => {
     await user.click(screen.getByRole("button", { name: /load sample/i }));
     await waitFor(() => expect(outputText()).toContain("order-1024"));
 
-    await user.click(screen.getByRole("combobox"));
-    await user.click(screen.getByRole("option", { name: "customer" }));
+    // The path selector is a searchable combobox; type to filter then pick.
+    const combo = screen.getByRole("combobox");
+    await user.click(combo);
+    await user.type(combo, "customer");
+    await user.click(await screen.findByRole("option", { name: "customer" }));
 
     // Only the customer object should remain; the order id should be gone.
     await waitFor(() => expect(outputText()).not.toContain("order-1024"));

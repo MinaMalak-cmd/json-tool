@@ -5,8 +5,9 @@ import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import { useJsonProcessor } from "./useJsonProcessor";
 import EditorPane from "./components/EditorPane";
 import ModeToggle from "./components/ModeToggle";
-import PropertySelector from "./components/PropertySelector";
+import PathSelector from "./components/PathSelector";
 import FileUploadButton from "./components/FileUploadButton";
+import DownloadButton from "./components/DownloadButton";
 import StatusStrip from "./components/StatusStrip";
 import { SAMPLE_JSON } from "./sample";
 
@@ -21,19 +22,22 @@ export default function JsonProcessor() {
     input,
     output,
     mode,
-    selectedProperty,
-    propertyKeys,
+    selectedPath,
+    pathOptions,
     inputStatus,
     outputError,
     setInput,
     setMode,
-    setSelectedProperty,
+    setSelectedPath,
   } = useJsonProcessor();
 
   const [inputCollapsed, setInputCollapsed] = useState(false);
   const [outputCollapsed, setOutputCollapsed] = useState(false);
 
-  const outputTitle = mode === "parse" ? "Output · Parsed" : "Output · String";
+  const isParse = mode === "parse";
+  const outputTitle = isParse ? "Output · Parsed" : "Output · String";
+  const downloadName = isParse ? "parsed.json" : "stringified.txt";
+  const downloadMime = isParse ? "application/json" : "text/plain";
 
   return (
     <Stack spacing={2} sx={{ height: "100%", minHeight: 0 }}>
@@ -46,11 +50,11 @@ export default function JsonProcessor() {
         useFlexGap
       >
         <ModeToggle mode={mode} onChange={setMode} />
-        {mode === "parse" && (
-          <PropertySelector
-            keys={propertyKeys}
-            value={selectedProperty}
-            onChange={setSelectedProperty}
+        {isParse && (
+          <PathSelector
+            options={pathOptions}
+            value={selectedPath}
+            onChange={setSelectedPath}
           />
         )}
         <Box sx={{ flexGrow: 1 }} />
@@ -107,6 +111,14 @@ export default function JsonProcessor() {
           placeholder="Transformed JSON will appear here…"
           collapsed={outputCollapsed}
           onToggleCollapse={() => setOutputCollapsed((c) => !c)}
+          headerActions={
+            <DownloadButton
+              value={output}
+              fileName={downloadName}
+              mimeType={downloadMime}
+              label="Download output"
+            />
+          }
           footer={
             outputError ? (
               <StatusStrip kind="error" message={outputError} />

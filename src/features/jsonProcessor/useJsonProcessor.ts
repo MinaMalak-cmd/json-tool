@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import {
+  enumeratePaths,
   formatJsonError,
-  getTopLevelKeys,
   parseJson,
   processJson,
+  type PathOption,
   type ProcessMode,
 } from "../../core/json";
 
@@ -16,10 +17,12 @@ export interface JsonProcessorState {
   input: string;
   output: string;
   mode: ProcessMode;
-  /** Selected top-level property, or "" for the whole document. */
-  selectedProperty: string;
-  /** Top-level keys available for selection (empty if N/A). */
-  propertyKeys: string[];
+  /** Selected path label, or "" for the whole document. */
+  selectedPath: string;
+  /** All addressable paths in the parsed input (empty if N/A). */
+  pathOptions: PathOption[];
+  /** True when the path list was capped for very large documents. */
+  pathsTruncated: boolean;
   /** Live validation status of the *input*. */
   inputStatus: InputStatus;
   /** Error produced while transforming, if any. */
@@ -29,7 +32,7 @@ export interface JsonProcessorState {
 export interface JsonProcessorApi extends JsonProcessorState {
   setInput: (value: string) => void;
   setMode: (mode: ProcessMode) => void;
-  setSelectedProperty: (key: string) => void;
+  setSelectedPath: (label: string) => void;
 }
 
 /**
@@ -37,15 +40,15 @@ export interface JsonProcessorApi extends JsonProcessorState {
  *
  * Validation runs on every input change (derived, not effect-driven) so the
  * UI always reflects the current text. The output is likewise derived from
- * (input, mode, selectedProperty), keeping the component tree free of manual
+ * (input, mode, selectedPath), keeping the component tree free of manual
  * synchronization.
  */
 export function useJsonProcessor(initialInput = ""): JsonProcessorApi {
   const [input, setInputState] = useState(initialInput);
   const [mode, setMode] = useState<ProcessMode>("parse");
-  const [selectedProperty, setSelectedProperty] = useState("");
+  const [selectedPath, setSelectedPath] = useState("");
 
-  // Parse once; everything downstream (keys, status, output) is derived.
+  // Parse once; everything downstream (paths, status, output) is derived.
   const parsed = useMemo(() => parseJson(input), [input]);
 
   const inputStatus = useMemo<InputStatus>(() => {
@@ -57,8 +60,11 @@ export function useJsonProcessor(initialInput = ""): JsonProcessorApi {
       : { kind: "error", message: formatJsonError(parsed.error) };
   }, [input, parsed]);
 
-  const propertyKeys = useMemo(
-    () => (parsed.ok ? getTopLevelKeys(parsed.value) : []),
+  const { options: pathOptions, truncated: pathsTruncated } = useMemo(
+    () =>
+      parsed.ok
+        ? enumeratePaths(parsed.value)
+        : { options: [] as PathOption[], truncated: false },
     [parsed],
   );
 
@@ -66,17 +72,14 @@ export function useJsonProcessor(initialInput = ""): JsonProcessorApi {
     if (input.trim() === "") {
       return { output: "", outputError: null };
     }
-    // Only honor a selected property when it still exists on the input.
-    const effectiveProperty = propertyKeys.includes(selectedProperty)
-      ? selectedProperty
-      : "";
-    const result = processJson(input, mode, {
-      selectedProperty: effectiveProperty,
-    });
+    // Resolve the selected label back to its path segments; ignore a stale
+    // selection that no longer exists in the current document.
+    const match = pathOptions.find((option) => option.label === selectedPath);
+    const result = processJson(input, mode, { path: match?.segments });
     return result.ok
       ? { output: result.value, outputError: null }
       : { output: "", outputError: formatJsonError(result.error) };
-  }, [input, mode, selectedProperty, propertyKeys]);
+  }, [input, mode, selectedPath, pathOptions]);
 
   const setInput = useCallback((value: string) => {
     setInputState(value);
@@ -86,12 +89,13 @@ export function useJsonProcessor(initialInput = ""): JsonProcessorApi {
     input,
     output,
     mode,
-    selectedProperty,
-    propertyKeys,
+    selectedPath,
+    pathOptions,
+    pathsTruncated,
     inputStatus,
     outputError,
     setInput,
     setMode,
-    setSelectedProperty,
+    setSelectedPath,
   };
 }

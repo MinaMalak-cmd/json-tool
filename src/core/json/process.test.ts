@@ -17,16 +17,27 @@ describe("processJson — parse mode", () => {
 
   it("narrows to a single selected property", () => {
     const source = '{"keep":"{\\"x\\":1}","drop":99}';
-    const result = processJson(source, "parse", { selectedProperty: "keep" });
+    const result = processJson(source, "parse", { path: ["keep"] });
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(JSON.parse(result.value)).toEqual({ x: 1 });
     }
   });
 
-  it("errors when the selected property is absent", () => {
+  it("narrows to a deeply nested path and unwraps it", () => {
+    const source = '{"data":{"getTitleV2":{"state":"{\\"uuid\\":\\"abc\\"}"}}}';
+    const result = processJson(source, "parse", {
+      path: ["data", "getTitleV2", "state"],
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(JSON.parse(result.value)).toEqual({ uuid: "abc" });
+    }
+  });
+
+  it("errors when the selected path is absent", () => {
     const result = processJson('{"a":1}', "parse", {
-      selectedProperty: "ghost",
+      path: ["ghost"],
     });
     expect(result.ok).toBe(false);
     if (!result.ok) {
@@ -51,7 +62,7 @@ describe("processJson — stringify mode", () => {
 
   it("ignores the selected property in stringify mode", () => {
     const result = processJson('{"a":1}', "stringify", {
-      selectedProperty: "a",
+      path: ["a"],
     });
     expect(result.ok).toBe(true);
     if (result.ok) {

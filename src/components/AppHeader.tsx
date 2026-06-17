@@ -2,6 +2,8 @@ import { Box, Link, Stack, Typography } from "@mui/material";
 import DataObjectRoundedIcon from "@mui/icons-material/DataObjectRounded";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { ACCENT, ACCENT_ALT } from "../theme";
+import { OWNER } from "../config";
+import BuyMeCoffeeButton from "./BuyMeCoffeeButton";
 
 /** Top app bar: brand mark, product name, tagline and a repo link. */
 export default function AppHeader() {
@@ -54,8 +56,10 @@ export default function AppHeader() {
 
       <Box sx={{ flexGrow: 1 }} />
 
+      <BuyMeCoffeeButton />
+
       <Link
-        href="https://github.com/"
+        href={OWNER.github}
         target="_blank"
         rel="noopener noreferrer"
         color="text.secondary"

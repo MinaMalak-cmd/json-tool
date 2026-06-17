@@ -27,23 +27,29 @@ describe("useJsonProcessor", () => {
     expect(JSON.parse(result.current.output)).toEqual({ payload: { x: 1 } });
   });
 
-  it("exposes top-level keys for the property selector", () => {
+  it("exposes nested paths for the path selector", () => {
     const { result } = renderHook(() => useJsonProcessor());
-    act(() => result.current.setInput('{"a":1,"b":2}'));
-    expect(result.current.propertyKeys).toEqual(["a", "b"]);
+    act(() => result.current.setInput('{"data":{"state":"x"}}'));
+    const labels = result.current.pathOptions.map((o) => o.label);
+    expect(labels).toContain("data");
+    expect(labels).toContain("data.state");
   });
 
-  it("narrows output to a selected property", () => {
+  it("narrows output to a selected nested path", () => {
     const { result } = renderHook(() => useJsonProcessor());
-    act(() => result.current.setInput('{"keep":"{\\"x\\":1}","drop":9}'));
-    act(() => result.current.setSelectedProperty("keep"));
+    act(() =>
+      result.current.setInput(
+        '{"data":{"getTitleV2":{"state":"{\\"x\\":1}"}}}',
+      ),
+    );
+    act(() => result.current.setSelectedPath("data.getTitleV2.state"));
     expect(JSON.parse(result.current.output)).toEqual({ x: 1 });
   });
 
-  it("ignores a stale selected property that no longer exists", () => {
+  it("ignores a stale selected path that no longer exists", () => {
     const { result } = renderHook(() => useJsonProcessor());
     act(() => result.current.setInput('{"keep":1}'));
-    act(() => result.current.setSelectedProperty("keep"));
+    act(() => result.current.setSelectedPath("keep"));
     // Replace input with one lacking the previously-selected key.
     act(() => result.current.setInput('{"other":2}'));
     expect(JSON.parse(result.current.output)).toEqual({ other: 2 });
