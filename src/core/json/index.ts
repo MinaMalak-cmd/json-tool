@@ -11,5 +11,11 @@ export {
   isJsonObject,
   type JsonObject,
 } from "./properties";
+export {
+  enumeratePaths,
+  pickPath,
+  MAX_PATH_OPTIONS,
+  type PathOption,
+} from "./paths";
 export { processJson } from "./process";
 export type { ProcessMode, ProcessOptions } from "./process";

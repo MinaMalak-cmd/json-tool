@@ -1,6 +1,6 @@
 import { deepParseValue } from "./deepParse";
 import { parseJson } from "./parse";
-import { pickProperty } from "./properties";
+import { pickPath } from "./paths";
 import { prettyPrint, stringifyJson } from "./stringify";
 import type { JsonResult } from "./types";
 
@@ -9,10 +9,11 @@ export type ProcessMode = "parse" | "stringify";
 
 export interface ProcessOptions {
   /**
-   * When set (and the mode is "parse"), only this top-level property of the
-   * input object is extracted and processed. Ignored when empty/undefined.
+   * When set (and the mode is "parse"), only the value at this path is
+   * extracted and processed. Supports nesting, e.g.
+   * `["data", "getTitleV2", "state"]`. Empty/undefined means "whole document".
    */
-  selectedProperty?: string;
+  path?: Array<string | number>;
   /** Indentation for pretty-printed output. */
   indent?: number;
 }
@@ -20,7 +21,7 @@ export interface ProcessOptions {
 /**
  * Run the requested transformation over a raw JSON string.
  *
- * - `parse`: validates input, optionally narrows to a single property, then
+ * - `parse`: validates input, optionally narrows to a nested path, then
  *   recursively unwraps any stringified JSON objects/arrays and pretty-prints.
  * - `stringify`: validates input and returns its escaped string form.
  *
@@ -43,15 +44,15 @@ export function processJson(
   }
 
   let target = parsed.value;
-  const { selectedProperty, indent } = options;
+  const { path, indent } = options;
 
-  if (selectedProperty) {
-    const picked = pickProperty(target, selectedProperty);
+  if (path && path.length > 0) {
+    const picked = pickPath(target, path);
     if (picked === undefined) {
       return {
         ok: false,
         error: {
-          message: `Property "${selectedProperty}" was not found on the root object.`,
+          message: `Path "${path.join(".")}" was not found in the document.`,
         },
       };
     }

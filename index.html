@@ -3,25 +3,97 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>JSON Studio — Parse, Stringify &amp; Unwrap Nested JSON Online</title>
     <meta
       name="description"
-      content="JSON Studio — parse, stringify and recursively unwrap nested JSON entirely in your browser. Your data never leaves your machine."
+      content="Free online JSON parser, formatter and stringifier. Validate JSON, beautify it, and recursively unwrap deeply nested stringified JSON — extract any property by path. 100% in your browser; your data never leaves your machine."
     />
+    <meta
+      name="keywords"
+      content="JSON parser, JSON formatter, JSON beautifier, JSON validator, stringify JSON, parse JSON, unwrap nested JSON, JSON viewer, online JSON tool"
+    />
+    <meta name="author" content="Mina Malak" />
     <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://MinaMalak-cmd.github.io/json-tool/" />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Studio" />
+    <meta
+      property="og:title"
+      content="JSON Studio — Parse, Stringify &amp; Unwrap Nested JSON"
+    />
+    <meta
+      property="og:description"
+      content="Free, private, browser-only JSON parser & formatter. Validate, beautify, and recursively unwrap nested stringified JSON — extract any property by path."
+    />
+    <meta property="og:url" content="https://MinaMalak-cmd.github.io/json-tool/" />
+    <meta property="og:image" content="https://MinaMalak-cmd.github.io/json-tool/favicon.svg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="JSON Studio — Parse, Stringify &amp; Unwrap Nested JSON"
+    />
+    <meta
+      name="twitter:description"
+      content="Free, private, browser-only JSON parser & formatter with recursive deep-unwrap and per-property extraction."
+    />
+    <meta name="twitter:image" content="https://MinaMalak-cmd.github.io/json-tool/favicon.svg" />
+
+    <!-- Icons & PWA -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="manifest" href="./site.webmanifest" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>JSON Studio — Parse, Stringify &amp; Unwrap JSON</title>
+
+    <!-- Structured data: helps search engines and AI engines understand the app -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "JSON Studio",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (web browser)",
+        "url": "https://MinaMalak-cmd.github.io/json-tool/",
+        "description": "Free online JSON parser, formatter and stringifier that validates JSON, beautifies it, and recursively unwraps deeply nested stringified JSON. Runs entirely in the browser with no server.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": [
+          "Parse and pretty-print JSON",
+          "Stringify JSON to an escaped string",
+          "Recursively unwrap nested stringified JSON",
+          "Extract any property by nested path",
+          "Live validation with descriptive errors",
+          "Upload, paste, copy and download",
+          "Runs fully client-side; private by design"
+        ],
+        "author": { "@type": "Person", "name": "Mina Malak" }
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script
-      type="module"
-      src="/src/main.tsx"
-    ></script>
+    <div id="root">
+      <!-- Crawlable fallback for engines that don't execute JavaScript -->
+      <noscript>
+        <h1>JSON Studio — Parse, Stringify &amp; Unwrap Nested JSON</h1>
+        <p>
+          JSON Studio is a free, private, browser-only tool to parse, validate,
+          format (beautify) and stringify JSON. It can recursively unwrap deeply
+          nested stringified JSON and extract any property by its path. Please
+          enable JavaScript to use the interactive editor.
+        </p>
+      </noscript>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

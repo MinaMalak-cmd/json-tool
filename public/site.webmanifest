@@ -1,0 +1,18 @@
+{
+  "name": "JSON Studio",
+  "short_name": "JSON Studio",
+  "description": "Parse, stringify and recursively unwrap nested JSON — entirely in your browser.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
