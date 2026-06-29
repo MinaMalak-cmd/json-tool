@@ -42,15 +42,15 @@ npm run dev          # start the dev server
 
 ### Scripts
 
-| Script                  | Description                                  |
-| ----------------------- | -------------------------------------------- |
-| `npm run dev`           | Start Vite dev server                        |
-| `npm run build`         | Typecheck + production build to `dist/`      |
-| `npm run preview`       | Preview the production build locally         |
-| `npm run typecheck`     | Type-check without emitting                  |
-| `npm run test`          | Run tests in watch mode                      |
-| `npm run test:run`      | Run the full test suite once (used in CI)    |
-| `npm run test:coverage` | Run tests with a coverage report             |
+| Script                  | Description                               |
+| ----------------------- | ----------------------------------------- |
+| `npm run dev`           | Start Vite dev server                     |
+| `npm run build`         | Typecheck + production build to `dist/`   |
+| `npm run preview`       | Preview the production build locally      |
+| `npm run typecheck`     | Type-check without emitting               |
+| `npm run test`          | Run tests in watch mode                   |
+| `npm run test:run`      | Run the full test suite once (used in CI) |
+| `npm run test:coverage` | Run tests with a coverage report          |
 
 ## Architecture
 
@@ -83,7 +83,7 @@ src/
 
 **Data flow:** `useJsonProcessor` holds `input`, `mode`, and `selectedProperty`.
 Everything else — validation status, available property keys, and the output —
-is *derived* from those via the pure `core/json` functions. Components are thin
+is _derived_ from those via the pure `core/json` functions. Components are thin
 and presentational.
 
 ## Testing
@@ -122,20 +122,20 @@ Pushing to `main` triggers the GitHub Actions pipeline in
 Owner-specific links and integrations live in [`src/config.ts`](src/config.ts)
 and can be overridden at build time with env vars (create a `.env` file):
 
-| Env var | Purpose |
-| ------- | ------- |
-| `VITE_SITE_URL` | Canonical site URL (SEO). |
-| `VITE_GITHUB_URL` | Repository link in the header. |
-| `VITE_BMC_URL` | Buy Me a Coffee page (button hides if empty). |
+| Env var                 | Purpose                                     |
+| ----------------------- | ------------------------------------------- | --------------------------------------------- | --- |
+| `VITE_SITE_URL`         | Canonical site URL (SEO).                   |
+| `VITE_GITHUB_URL`       | Repository link in the header.              |
+| <!--                    | `VITE_BMC_URL`                              | Buy Me a Coffee page (button hides if empty). | --> |
 | `VITE_PLAUSIBLE_DOMAIN` | Enable Plausible analytics for this domain. |
-| `VITE_GOATCOUNTER_URL` | Enable GoatCounter analytics endpoint. |
+| `VITE_GOATCOUNTER_URL`  | Enable GoatCounter analytics endpoint.      |
 
 ## Usage analytics & a private stats dashboard
 
 You asked for usage stats (how many people use the tool) **without building user
 authentication**. That's exactly what privacy-friendly, hosted analytics are
 for. The key idea: the app sends anonymous page-view pings to a third-party
-service; the **dashboard lives on that service and is protected by *their*
+service; the **dashboard lives on that service and is protected by _their_
 login** — so only you can see the numbers. No auth code, no user accounts, and
 no cookies/PII in this app.
 
@@ -170,36 +170,6 @@ When neither var is set, **zero tracking ships** — see
 After deploying, submit the site to
 [Google Search Console](https://search.google.com/search-console) and
 [Bing Webmaster Tools](https://www.bing.com/webmasters).
-
-## Support / Buy Me a Coffee
-
-A **Buy Me a Coffee** button appears in the header. To set it up:
-
-1. Create a free account at [buymeacoffee.com](https://www.buymeacoffee.com/).
-2. Pick your page name → your link becomes `https://buymeacoffee.com/yourname`.
-3. Set `VITE_BMC_URL=https://buymeacoffee.com/yourname` (or edit
-   `BUY_ME_A_COFFEE_URL` in `src/config.ts`). Leave it empty to hide the button.
-
-## Making money from this project
-
-It's a free, client-side tool, so monetization is about audience + goodwill
-rather than locking features. Realistic options, roughly easiest first:
-
-1. **Donations** — the Buy Me a Coffee / GitHub Sponsors buttons. Low effort.
-2. **Tasteful sponsorship** — a single "Sponsored by" slot or a
-   [Carbon Ads](https://www.carbonads.net/) unit (dev-friendly, non-intrusive).
-3. **Affiliate links** — recommend relevant developer tools/hosting you actually
-   use.
-4. **A "Pro" tier** — keep the core free; charge for power features (saved
-   snippets, large-file/desktop app, JSON Schema validation, share links). This
-   is where you'd eventually add a backend + auth.
-5. **Paid API / CLI** — package the `core/json` engine as an npm library or a
-   hosted API for teams.
-6. **Content & SEO** — rank for "json parser / formatter / unescape" queries
-   (hence the SEO work above), then monetize the traffic via the above.
-
-Start with donations + SEO (zero infrastructure), and only add a backend when a
-paid feature clearly justifies it.
 
 ## Contributing
 
