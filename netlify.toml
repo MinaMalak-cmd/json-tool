@@ -1,0 +1,20 @@
+# Netlify deployment config.
+# This overrides the build settings in the Netlify UI, so you don't have to
+# fix them by hand. Commit this file and re-deploy.
+
+[build]
+  command = "npm run build"
+  # Vite outputs to dist/ (NOT build/) — this is what fixed the deploy error.
+  publish = "dist"
+
+[build.environment]
+  # Netlify serves from the site root, so the app must be built with base "/".
+  VITE_BASE_PATH = "/"
+  NODE_VERSION = "20"
+
+# Single-page app fallback: serve index.html for any path (harmless even
+# without client-side routing, and future-proofs it).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

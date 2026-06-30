@@ -137,3 +137,6 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Raw screen recordings (the optimized public/demo.mp4 is committed instead)
+*.mov
