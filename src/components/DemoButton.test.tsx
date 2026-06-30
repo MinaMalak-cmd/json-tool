@@ -12,7 +12,7 @@ describe("DemoButton", () => {
   it("opens a dialog with the demo video on click", async () => {
     const user = userEvent.setup();
     renderWithTheme(<DemoButton />);
-
+    console.log("hello");
     await user.click(screen.getByRole("button", { name: /watch demo/i }));
 
     const dialog = await screen.findByRole("dialog");
