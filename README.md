@@ -130,32 +130,6 @@ and can be overridden at build time with env vars (create a `.env` file):
 | `VITE_PLAUSIBLE_DOMAIN` | Enable Plausible analytics for this domain. |
 | `VITE_GOATCOUNTER_URL`  | Enable GoatCounter analytics endpoint.      |
 
-## Usage analytics & a private stats dashboard
-
-You asked for usage stats (how many people use the tool) **without building user
-authentication**. That's exactly what privacy-friendly, hosted analytics are
-for. The key idea: the app sends anonymous page-view pings to a third-party
-service; the **dashboard lives on that service and is protected by _their_
-login** — so only you can see the numbers. No auth code, no user accounts, and
-no cookies/PII in this app.
-
-Pick one (both have free tiers):
-
-- **Plausible** — set `VITE_PLAUSIBLE_DOMAIN=yourdomain` and add the site in your
-  Plausible account. View stats at `plausible.io` (your account).
-- **GoatCounter** — free for non-commercial use. Create a site at
-  `goatcounter.com`, then set
-  `VITE_GOATCOUNTER_URL=https://YOURCODE.goatcounter.com/count`. View stats in
-  your GoatCounter dashboard.
-
-When neither var is set, **zero tracking ships** — see
-[`src/analytics.ts`](src/analytics.ts).
-
-> Want richer, self-owned numbers without auth? Alternatives: Cloudflare Web
-> Analytics, Umami (self-host), or Vercel Analytics. A "secret" in-app admin
-> page is **not** secure (anyone can read client-side code), so prefer a hosted
-> dashboard gated by the provider's login.
-
 ## SEO & AI-engine friendliness
 
 - Rich `<meta>` tags, Open Graph & Twitter cards, and a canonical URL in
