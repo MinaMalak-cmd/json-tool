@@ -3,10 +3,10 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // Base path differs per host:
-//  - GitHub Pages serves from a subpath (/json-tool/) → default below.
-//  - Root-serving hosts (Netlify, Vercel, Cloudflare Pages) need "/".
-// Set VITE_BASE_PATH in the host's build env to override (Netlify sets "/").
-const base = process.env.VITE_BASE_PATH ?? "/json-tool/";
+//  - Root-serving hosts (Vercel, Netlify, Cloudflare Pages) need "/" → default.
+//  - GitHub Pages serves from a subpath; its Actions workflow sets
+//    VITE_BASE_PATH=/json-tool/ to override this default.
+const base = process.env.VITE_BASE_PATH ?? "/";
 
 // https://vitejs.dev/config/
 export default defineConfig({
